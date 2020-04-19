@@ -18,6 +18,10 @@ command (UNIX-like only) :
 $> chmod +x ~/.scripts/decryptor
 ```
 
+## Configuration
+
+`decryptor` uses the same ENV variable `RAILS_MASTER_KEY` to find the master key.
+
 
 ## Diff
 
