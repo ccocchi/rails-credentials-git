@@ -10,7 +10,7 @@ module RailsCredentialsGit
 
     desc "install", "Copy binary into project's folder"
     def install
-      copy_file "bin/enc", "bin/enc", mode: :preserve
+      copy_file "lib/rails-credentials-git/templates/enc", "bin/enc", mode: :preserve
 
       method = RailsCredentialsGit.decrypt_method.sub("self.", "")
       insert_into_file "bin/enc", "\n#{method}" , after: %{require "openssl"\n}
