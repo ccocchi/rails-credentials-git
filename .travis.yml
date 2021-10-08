@@ -1,5 +1,6 @@
 language: ruby
 cache: bundler
+dist: bionic
 env:
   - "RAILS_VERSION=5.2.0"
   - "RAILS_VERSION=6.0.0"
