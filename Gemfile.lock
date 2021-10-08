@@ -23,7 +23,7 @@ GEM
       thread_safe (~> 0.1)
 
 PLATFORMS
-  universal-darwin-19
+  ruby
 
 DEPENDENCIES
   activesupport (~> 5.2.0)
