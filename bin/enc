@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+require "base64"
+require "openssl"
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: enc [options] <encryped_file>"
+
+  opts.on('-k', '--key-path', 'Path to master key') do |path|
+    options[:key_path] = path
+  end
+
+  opts.on("--conflict") do
+    options[:conflict] = true
+  end
+
+  opts.on("--compare=BRANCH") do |branch|
+    options[:compare] = branch
+  end
+end.parse!
+
+key = ENV["RAILS_MASTER_KEY"]
+
+unless key
+  path = options[:key_path] || File.expand_path("../config/master.key", __dir__)
+  key = File.read(path).strip
+end
+
+if options.empty?
+  content_file = ARGV.empty? ? File.expand_path("../config/credentials.yml.enc", __dir__) : ARGV[0]
+  content = File.read(content_file)
+  puts decrypt(content, key)
+else
+  require "open3"
+
+  stdout, _, _ = if (target = options[:compare])
+    Open3.capture3("git diff --color #{target}:config/credentials.yml.enc HEAD:config/credentials.yml.enc")
+  else
+    target = File.exist?(File.expand_path("../.git/REBASE_HEAD", __dir__)) ? "REBASE_HEAD" : "MERGE_HEAD"
+    Open3.capture3("git diff --color HEAD:config/credentials.yml.enc #{target}:config/credentials.yml.enc")
+  end
+
+  stdout = "Nothing changed" if stdout.empty?
+  puts stdout
+end
