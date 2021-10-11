@@ -10,5 +10,7 @@ rvm:
   - 3.0.2
 before_install:
   - gem update bundler
-matrix:
-  fast_finish: true
+jobs:
+  exclude:
+  - rvm: 3.0.2
+    env: "RAILS_VERSION=5.2.0"
